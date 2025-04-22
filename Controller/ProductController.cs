@@ -13,6 +13,10 @@ namespace Boilerplate.Controller
     public class ProductController: ControllerBase {
         private readonly AppDBContext _context;
 
+        public ProductController(AppDBContext context){
+            _context = context;
+        }
+
         [HttpGet("product-list")]
         public async Task<ActionResult<ApiResponse<IEnumerable<Product>>>> Get(){
             var productList = await _context.Products.Include(p => p.Category).ToListAsync();

@@ -13,21 +13,24 @@ namespace Boilerplate.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController: ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly AppDBContext _context;
         private readonly IConfiguration _config;
 
-        public AuthController(AppDBContext context, IConfiguration config){
+        public AuthController(AppDBContext context, IConfiguration config)
+        {
             _context = context;
             _config = config;
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequst requst){
+        public IActionResult Login(LoginRequst requst)
+        {
 
             var user = _context.Users.SingleOrDefault(x => x.Username == requst.Username);
-            if (user == null || !BCrypt.Net.BCrypt.Verify(requst.Password, user.Password)){
+            if (user == null || !BCrypt.Net.BCrypt.Verify(requst.Password, user.Password))
+            {
                 return Unauthorized("Invalid credentials");
             }
             var claims = new[]
@@ -48,26 +51,46 @@ namespace Boilerplate.Controller
             );
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-            
-            return Ok(ApiResponse<object>.SuccessResponse(new {token = tokenString}));
+
+            return Ok(ApiResponse<object>.SuccessResponse(new { token = tokenString }));
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request){
+        public IActionResult Register(RegisterRequest request)
+        {
 
-            var user = _context.Users.SingleOrDefault(x => x.Username == request.Username);
+            var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var user = _context.Users.SingleOrDefault(x => x.Username == request.Username);
 
-            if(user != null){
-                return Unauthorized("Invalid credentials");
+                if (user != null)
+                {
+                    return Unauthorized(ApiResponse<object>.ErrorResponse(null, "Username Already Exist"));
+                }
+                var newUser = new User
+                {
+                    Username = request.Username,
+                    Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
+                };
+
+                _context.Users.Add(newUser);
+                _context.SaveChanges();
+
+                return Ok(ApiResponse<object>.SuccessResponse(new
+                {
+                    id = newUser.Id,
+                    username = newUser.Username
+                }));
+
             }
-            var newUser = _context.Users.Add(new User{
-                Username = request.Username,
-                Password = BCrypt.Net.BCrypt.HashPassword(request.Password)
-            });
+            catch (Exception e)
+            {
+                transaction.Rollback();
+                return StatusCode(500, ApiResponse<string>.ErrorResponse(null, "Registration failed: " + e.Message));
+            }
 
-            _context.SaveChanges();
 
-            return Ok(ApiResponse<object>.SuccessResponse(newUser));
         }
     }
 }
