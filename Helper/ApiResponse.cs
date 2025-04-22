@@ -6,6 +6,6 @@ namespace Boilerplate.Helper
 
         public static ApiResponse<T> SuccessResponse(T data, string? error = null) => new() { Error = null, Data = data};
 
-        public static ApiResponse<T> ErrorResponse(T data, string? error ) => new() {Error = error, Data = data};
+        public static ApiResponse<T> ErrorResponse(T? data, string? error ) => new() {Error = error, Data = data};
     }
 }

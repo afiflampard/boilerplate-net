@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Portofolio\\boilerplate_net\\Boilerplate\\Boilerplate.csproj": {}
+    "/home/afif/Dokumen/boilerplate/boilerplate-net/Boilerplate.csproj": {}
   },
   "projects": {
-    "D:\\Portofolio\\boilerplate_net\\Boilerplate\\Boilerplate.csproj": {
+    "/home/afif/Dokumen/boilerplate/boilerplate-net/Boilerplate.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Portofolio\\boilerplate_net\\Boilerplate\\Boilerplate.csproj",
+        "projectUniqueName": "/home/afif/Dokumen/boilerplate/boilerplate-net/Boilerplate.csproj",
         "projectName": "Boilerplate",
-        "projectPath": "D:\\Portofolio\\boilerplate_net\\Boilerplate\\Boilerplate.csproj",
-        "packagesPath": "C:\\Users\\ASUS\\.nuget\\packages\\",
-        "outputPath": "D:\\Portofolio\\boilerplate_net\\Boilerplate\\obj\\",
+        "projectPath": "/home/afif/Dokumen/boilerplate/boilerplate-net/Boilerplate.csproj",
+        "packagesPath": "/home/afif/.nuget/packages/",
+        "outputPath": "/home/afif/Dokumen/boilerplate/boilerplate-net/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ASUS\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/afif/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,11 +32,6 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -105,7 +100,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.408/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.115/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
