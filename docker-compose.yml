@@ -1,0 +1,26 @@
+version: "3.3"
+
+volumes:
+  pg_data:
+    driver: local
+  mongodb_data_container: 
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_MULTIPLE_DATABASES=postgres,postgres2
+      - POSTGRES_PASSWORD=password
+    restart: always
+    volumes:
+      - ./postgres:/var/lib/postgresql/postgres
+    ports:
+      - 5432:5432
+    networks:
+      - backend
