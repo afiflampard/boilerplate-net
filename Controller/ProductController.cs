@@ -120,5 +120,27 @@ namespace Boilerplate.Controller
                 return StatusCode(500, ApiResponse<string>.ErrorResponse(null, e.Message));
             }
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteProduct(Guid id){
+            var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                var findProduct = await _context.Products.FirstAsync(p => p.Id == id);
+                if(findProduct == null){
+                    return NotFound(ApiResponse<Product>.ErrorResponse(null, "Product Not Found"));
+                }
+
+                _context.Products.Remove(findProduct);
+                await transaction.CommitAsync();
+                return Ok(ApiResponse<string>.SuccessResponse("Product Successfully Deleted", null));
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, ApiResponse<string>.ErrorResponse(null, e.Message));
+            }
+        }
     }
 }
