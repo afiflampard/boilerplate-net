@@ -7,8 +7,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
@@ -41,7 +39,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Enter 'Bearer' followed by your token",
         Name = "Authorization",
         Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
-        Scheme = "bearer", // must be lowercase
+        Scheme = "bearer",
         BearerFormat = "JWT"
     });
 
