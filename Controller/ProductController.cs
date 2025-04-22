@@ -54,28 +54,65 @@ namespace Boilerplate.Controller
                 var existingCategoryNames = existingCategories.Select(c => c.Name).ToHashSet();
                 var newCategoryNames = categoryList.Where(name => !existingCategoryNames.Contains(name));
 
-                foreach (var name in newCategoryNames)
-                {
-                    var newCategory = new Category { Name = name };
-                    _context.Categories.Add(newCategory);
-                }
-
                 var product = new Product
                 {
                     Name = request.Name,
                     Price = request.Price
+
                 };
 
-                _context.Products.Add(product);
+                foreach (var category in existingCategories)
+                {
+                    product.CategoryId = category.Id;
 
+                }
+
+                foreach (var name in newCategoryNames)
+                {
+                    var newCategory = new Category { Name = name };
+                    _context.Categories.Add(newCategory);
+
+                    await _context.SaveChangesAsync();
+                    product.CategoryId = newCategory.Id;
+
+                }
+
+                _context.Products.Add(product);
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
 
-                return Ok(ApiResponse<object>.SuccessResponse(new {
+                return Ok(ApiResponse<object>.SuccessResponse(new
+                {
                     id = product.Id,
                     product.Name
                 }));
 
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, ApiResponse<string>.ErrorResponse(null, e.Message));
+            }
+        }
+
+        [HttpPut("update/{id}")]
+        public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductRequest request)
+        {
+            var transaction = _context.Database.BeginTransaction();
+
+            try
+            {
+                var findProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+                if (findProduct == null)
+                {
+                    return NotFound(ApiResponse<Product>.ErrorResponse(null, "Product Not Found"));
+                }
+
+                findProduct.Name = request.Name;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return Ok(ApiResponse<Product>.SuccessResponse(findProduct, null));
             }
             catch (Exception e)
             {
